@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
+        android:padding="25dp"
         android:textSize="20sp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
@@ -83,7 +84,8 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:linksClickable="true"
-        android:onClick="forgotPassword"/>
+        android:onClick="forgotPassword"
+        android:clickable="true"/>
 
     <TextView
         android:id="@+id/sign_up_id"
@@ -96,6 +98,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:linksClickable="true"
-        android:onClick=""/>
+        android:onClick="setSignUp"
+        android:clickable="true"/>
 
 </RelativeLayout>

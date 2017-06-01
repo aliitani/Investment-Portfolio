@@ -9,4 +9,5 @@
     <string name="enter_email">Enter Email:</string>
     <string name="enter_password">Enter Password:</string>
     <string name="login_button">Log In</string>
+    <string name="submit_email_button">Submit!</string>
 </resources>
