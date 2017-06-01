@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MIDTERM-Itani</string>
+    <string name="username_title">Username:</string>
+    <string name="password_title">Password:</string>
+    <string name="email_title">Email:</string>
+    <string name="forgot_password_title">Forgot Password?</string>
+    <string name="sign_up_title">Sign Up!</string>
+    <string name="enter_username">Enter Username:</string>
+    <string name="enter_email">Enter Email:</string>
+    <string name="enter_password">Enter Password:</string>
+    <string name="login_button">Log In</string>
+</resources>
