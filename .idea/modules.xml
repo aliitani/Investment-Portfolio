@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MIDTERM-Itani.iml" filepath="$PROJECT_DIR$/MIDTERM-Itani.iml" />
       <module fileurl="file://$PROJECT_DIR$/Midterm-Itani.iml" filepath="$PROJECT_DIR$/Midterm-Itani.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

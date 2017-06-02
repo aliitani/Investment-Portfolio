@@ -9,25 +9,19 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import database.DatabaseHelper;
-import database.DatabaseSchema.DBTable;
 
 public class MainActivity extends AppCompatActivity {
-    public Context mContext;
-    public SQLiteDatabase mDatabase;
+    DatabaseHelper mDatabaseHelper;
 
     TextView mforgotPassword;
     TextView mSignUp;
-
-    public MainActivity(Context context) {
-        mContext = context.getApplicationContext();
-        mDatabase = new DatabaseHelper(mContext).getWritableDatabase();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDatabaseHelper = new DatabaseHelper(this);
 
         mforgotPassword = (TextView) findViewById(R.id.forgot_password_id);
         mSignUp = (TextView) findViewById(R.id.sign_up_id);
