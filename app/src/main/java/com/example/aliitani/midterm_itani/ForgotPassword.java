@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.aliitani.midterm_itani.Database.DatabaseHelper;
+
 import java.util.regex.Matcher;
 
 import static com.example.aliitani.midterm_itani.SignUp.VALID_EMAIL_ADDRESS_REGEX;
@@ -33,19 +35,26 @@ public class ForgotPassword extends AppCompatActivity {
     }
 
     public void sendEmail(View view) {
-         if(!email.getText().toString().isEmpty()) {
+         if (!email.getText().toString().isEmpty()) {
              if(validate(email.getText().toString())) {
                  Intent i = new Intent(Intent.ACTION_SEND);
                  i.setType("message/rfc822");
                  //SQL HERE
-                 i.putExtra(Intent.EXTRA_EMAIL, new String[]{email.getText().toString()});
-                 i.putExtra(Intent.EXTRA_SUBJECT, "Forgot Password?!");
-                 //SQL HERE
-                 i.putExtra(Intent.EXTRA_TEXT, "body of email");
-                 try {
-                     startActivity(Intent.createChooser(i, "Send mail..."));
-                 } catch (android.content.ActivityNotFoundException ex) {
-                     Toast.makeText(ForgotPassword.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                 if (!mDatabaseHelper.ifEmailExists(email.getText().toString())) {
+                     i.putExtra(Intent.EXTRA_EMAIL, new String[]{email.getText().toString()});
+
+                     i.putExtra(Intent.EXTRA_SUBJECT, "Forgot Password?!");
+                     //SQL HERE
+                     i.putExtra(Intent.EXTRA_TEXT, mDatabaseHelper.getPassword(email.getText().toString()));
+
+
+                     try {
+                         startActivity(Intent.createChooser(i, "Send mail..."));
+                     } catch (android.content.ActivityNotFoundException ex) {
+                         Toast.makeText(ForgotPassword.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                     }
+                 } else {
+                     Toast.makeText(this, "Email does not exist!", Toast.LENGTH_SHORT).show();
                  }
              } else {
                  Toast.makeText(ForgotPassword.this, "Check email i.e example@example.com", Toast.LENGTH_SHORT).show();
@@ -55,9 +64,9 @@ public class ForgotPassword extends AppCompatActivity {
         }
     }
 
-
     public static boolean validate(String email) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
         return matcher.find();
     }
+
 }

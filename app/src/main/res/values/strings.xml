@@ -10,4 +10,6 @@
     <string name="enter_password">Enter Password:</string>
     <string name="login_button">Log In</string>
     <string name="submit_email_button">Submit!</string>
+    <string name="authenticated_username">\'s Investment Portfolio</string>
+    <string name="total">Total: </string>
 </resources>
