@@ -10,6 +10,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/enter_ticker_symbol"
+        android:textColor="@color/black"
+        android:padding="10dp"
+        android:layout_margin="10dp"
         android:inputType="text"/>
 
     <EditText
@@ -17,7 +20,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="number|numberDecimal"
+        android:inputType="number"
+        android:textColor="@color/black"
+        android:padding="10dp"
+        android:layout_margin="10dp"
         android:hint="@string/enter_number_of_shares"/>
 
 

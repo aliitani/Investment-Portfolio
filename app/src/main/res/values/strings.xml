@@ -17,6 +17,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="enter_ticker_symbol">enter ticker symbol.</string>
-    <string name="enter_number_of_shares">enter number of shares</string>
+    <string name="enter_ticker_symbol">Enter ticker symbol.</string>
+    <string name="enter_number_of_shares">Enter the number of shares</string>
+    <string name="confirm_pass_title">Confirm Password:</string>
+    <string name="confirm_password_hint">Confirm Password:</string>
 </resources>

@@ -19,6 +19,7 @@ public class SignUp extends AppCompatActivity {
 
     EditText username;
     EditText password;
+    EditText confirmPassword;
     EditText email;
     Button signupButton;
 
@@ -30,7 +31,8 @@ public class SignUp extends AppCompatActivity {
         mDatabaseHelper = new DatabaseHelper(this);
 
         username = (EditText) findViewById(R.id.username_sign_up_id);
-        password = (EditText) findViewById(R.id.password_sign_up_id);
+        password = (EditText) findViewById(R.id.password_sign_up_id_1);
+        confirmPassword = (EditText) findViewById(R.id.password_sign_up_id_2);
         email = (EditText) findViewById(R.id.email_sign_up_id);
         signupButton = (Button) findViewById(R.id.sign_up_id);
 

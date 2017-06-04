@@ -1,4 +1,4 @@
-package com.example.aliitani.midterm_itani.RecyclerView;
+package com.example.aliitani.midterm_itani.MainApp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,10 +20,14 @@ import android.widget.Toast;
 import com.example.aliitani.midterm_itani.Database.DatabaseHelper;
 import com.example.aliitani.midterm_itani.R;
 
+
 public class MainApp extends AppCompatActivity {
     DatabaseHelper databaseHelper;
-    Item item;
+
     TextView titleAuthUser;
+
+    RecyclerView mRecyclerView;
+    MyAdapter mMyAdapter;
     Toolbar toolbar;
 
     @Override
@@ -34,14 +40,10 @@ public class MainApp extends AppCompatActivity {
 
         String username = getIntent().getStringExtra("Username");
 
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.fragment);
-
-        if(fragment == null) {
-            fragment = new RecyclerViewFragment();
-            fm.beginTransaction().add(R.id.fragment, fragment)
-                    .commit();
-        }
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mMyAdapter = new MyAdapter(MainApp.this, Data.getData());
+        mRecyclerView.setAdapter(mMyAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         username += "'s Investment Portfolio.";
 

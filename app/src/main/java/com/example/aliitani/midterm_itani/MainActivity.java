@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.aliitani.midterm_itani.Database.DatabaseHelper;
-import com.example.aliitani.midterm_itani.RecyclerView.MainApp;
+import com.example.aliitani.midterm_itani.MainApp.MainApp;
 
 
 public class MainActivity extends AppCompatActivity {
