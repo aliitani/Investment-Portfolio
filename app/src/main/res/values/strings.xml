@@ -12,4 +12,11 @@
     <string name="submit_email_button">Submit!</string>
     <string name="authenticated_username">\'s Investment Portfolio</string>
     <string name="total">Total: </string>
+    <string name="add">+</string>
+    <string name="refresh">Refresh</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_ticker_symbol">enter ticker symbol.</string>
+    <string name="enter_number_of_shares">enter number of shares</string>
 </resources>

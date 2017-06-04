@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.aliitani.midterm_itani.Database.DatabaseHelper;
-import com.example.aliitani.midterm_itani.RecyclerView.RecyclerActivity;
+import com.example.aliitani.midterm_itani.RecyclerView.MainApp;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
         if(databaseHelper.checkLogin(username.getText().toString(), password.getText().toString())) {
-            Intent startApp = new Intent(MainActivity.this, RecyclerActivity.class);
+            Intent startApp = new Intent(MainActivity.this, MainApp.class);
 
             // log in credentials worked and should start app.
             startApp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
