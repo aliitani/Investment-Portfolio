@@ -3,6 +3,7 @@ package com.example.aliitani.midterm_itani.MainApp;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
@@ -24,11 +25,17 @@ import android.widget.Toast;
 import com.example.aliitani.midterm_itani.Database.DatabaseHelper;
 import com.example.aliitani.midterm_itani.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class MainApp extends AppCompatActivity {
     DatabaseHelper databaseHelper;
@@ -36,32 +43,50 @@ public class MainApp extends AppCompatActivity {
     TextView titleAuthUser;
     RecyclerView mRecyclerView;
     MyAdapter mMyAdapter;
+    Data data;
     Toolbar toolbar;
 
-    EditText itemToAdd;
-    EditText numberOfShares;
-
-
     String result;
+    String symbol;
+    String username;
+
+    String numberShares;
+    String stockPrice;
+
+    String tickerSymbol;
+
+    TextView totalShares;
+    double total;
+//    ArrayList<Information> data;
+//    Information mInformation;
+
+    JSONObject start;
+    JSONObject query;
+    JSONObject results;
+    JSONObject quote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_app);
-        databaseHelper = new DatabaseHelper(this);
+        databaseHelper = new DatabaseHelper(MainApp.this);
         titleAuthUser = (TextView) findViewById(R.id.authenticated_username);
+        totalShares = (TextView) findViewById(R.id.total_shares);
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-
 
         setRecyclerView();
         setTitleAuthUser();
         setSupportActionBar(toolbar);
-        new BackgroundTask().execute();
+
+        onLogIn();
 
     }
+    public void onLogIn() {
+        String selectQuery = "SELECT * FROM Ip_Table where username = '1'";
 
+    }
     public void setTitleAuthUser(){
-        String username = getIntent().getStringExtra("Username");
+        username = getIntent().getStringExtra("Username");
         username += "'s Investment Portfolio.";
         titleAuthUser.setText(username);
 
@@ -70,6 +95,7 @@ public class MainApp extends AppCompatActivity {
     public void setRecyclerView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mMyAdapter = new MyAdapter(MainApp.this, Data.getData());
+        data = new Data();
 
         mRecyclerView.setAdapter(mMyAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -78,34 +104,87 @@ public class MainApp extends AppCompatActivity {
 
     }
 
+    public void addItems(String price) {
+        boolean isInserted = databaseHelper.insertInvestData(getIntent().getStringExtra("Username"), tickerSymbol, Integer.parseInt(numberShares), Double.parseDouble(price), (Integer.parseInt(numberShares) * Double.parseDouble(price)));
+        System.out.println(isInserted);
+
+        if (isInserted){
+            data.addItem(tickerSymbol, numberShares, price, String.valueOf(Integer.parseInt(numberShares)* Double.parseDouble(price)));
+            total += Integer.parseInt(numberShares) * Double.parseDouble(price);
+            totalShares.setText(String.format("Total for this portfolio: %.4f", total));
+            mMyAdapter.notifyItemInserted(data.getData().size()-1);
+        } else {
+            Toast.makeText(MainApp.this, "Note added, Database Error!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void processJSON() {
+        symbol = tickerSymbol;
+        new BackgroundTask().execute();
+    }
+
+    public void readJSON () {
+        System.out.println("here");
+        System.out.println(result);
+
+        if(result != null) {
+            try {
+                start = new JSONObject(result);
+                query = start.getJSONObject("query");
+                results = query.getJSONObject("results");
+                quote = results.getJSONObject("quote");
+                System.out.println(quote.getString("LastTradePriceOnly"));
+                stockPrice = quote.getString("LastTradePriceOnly");
+                System.out.println(stockPrice);
+
+                addItems(stockPrice);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+          Toast.makeText(this, "JSON ERROR.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void addItem() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainApp.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainApp.this);
         View view = getLayoutInflater().inflate(R.layout.add_item_layout_dialog, null);
 
-        EditText mitem = (EditText) view.findViewById(R.id.item_to_add);
-        EditText mnumbershares = (EditText) view.findViewById(R.id.number_of_shares);
+        final EditText mitem = (EditText) view.findViewById(R.id.item_to_add);
+        final EditText mnumbershares = (EditText) view.findViewById(R.id.number_of_shares);
+        final Button addButton = (Button) view.findViewById(R.id.add_item_dialog);
+        final Button closeButton = (Button) view.findViewById(R.id.cancel_button_dialog);
 
-        builder.setTitle("Invest in more");
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                System.out.println("dsajfhasdlkfsad");
-            }
-        });
+        builder.setTitle("Invest in more!");
 
         builder.setView(view);
-        AlertDialog alertDialog = builder.create();
+        final AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!mitem.getText().toString().isEmpty() && !mnumbershares.getText().toString().isEmpty()) {
+                    tickerSymbol = mitem.getText().toString().trim();
+                    numberShares = mnumbershares.getText().toString().trim();
+                    alertDialog.dismiss();
 
-        Toast.makeText(this, "geere", Toast.LENGTH_SHORT).show();
+                    processJSON();
+
+                } else {
+                    Toast.makeText(MainApp.this, "Make sure to fill everything first", Toast.LENGTH_LONG);
+                }
+            }
+        });
+
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
     }
 
     public void addInvestment(String symbol, double shares) {
@@ -131,12 +210,12 @@ public class MainApp extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             result = s;
-            System.out.println(s);
+            readJSON();
         }
 
         @Override
         protected void onPreExecute() {
-            JSON_URL = "https://query.yahooapis.com/v1/public/yql?q=Select%20*%20from%20yahoo.finance.quote%20where%20symbol%20in%20(%22goog%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
+            JSON_URL = "https://query.yahooapis.com/v1/public/yql?q=Select%20*%20from%20yahoo.finance.quote%20where%20symbol%20in%20(%22" + symbol + "%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
         }
 
         @Override

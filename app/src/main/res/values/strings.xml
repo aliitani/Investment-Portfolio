@@ -21,4 +21,6 @@
     <string name="enter_number_of_shares">Enter the number of shares</string>
     <string name="confirm_pass_title">Confirm Password:</string>
     <string name="confirm_password_hint">Confirm Password:</string>
+    <string name="invest">Invest!</string>
+    <string name="later">Later...</string>
 </resources>

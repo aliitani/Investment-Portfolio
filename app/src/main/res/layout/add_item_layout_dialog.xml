@@ -26,5 +26,20 @@
         android:layout_margin="10dp"
         android:hint="@string/enter_number_of_shares"/>
 
+    <Button
+        android:id="@+id/add_item_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:text="@string/invest"/>
+
+    <Button
+        android:id="@+id/cancel_button_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/later"/>
+
 
 </LinearLayout>

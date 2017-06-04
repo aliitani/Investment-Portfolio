@@ -8,9 +8,18 @@ public class Information {
     public String tickerSymbol;
     public int numberOfShares;
     public double pricePerShare;
+    public double totalPerShare;
 
     public String getTickerSymbol() {
         return tickerSymbol;
+    }
+
+    public void setTotalPerShare(double totalPerShare) {
+        this.totalPerShare = totalPerShare;
+    }
+
+    public double getTotalPerShare() {
+        return totalPerShare;
     }
 
     public void setTickerSymbol(String tickerSymbol) {

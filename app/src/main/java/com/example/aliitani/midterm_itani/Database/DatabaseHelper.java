@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Database.db";
-    public static final String USERS_PROFILE_TABLE = "users_table";
-    public static final String INVESTMENT_PORTFOLIO_TABLE = "ip_table";
+    public static final String USERS_PROFILE_TABLE = "Users_Table";
+    public static final String INVESTMENT_PORTFOLIO_TABLE = "Ip_Table";
 
     public static final String T1_COL1 = "ID";
     public static final String T1_COL2 = "USERNAME";
@@ -28,14 +28,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String T2_COL3 = "STICKER SYMBOL";
     public static final String T2_COL4 = "NUMBER OF SHARES";
     public static final String T2_COL5 = "PRICE PER SHARE";
+    public static final String T2_COL6 = "TOTAL PER SHARE";
 
-    public static final String create_user_profile_table = "CREATE TABLE " + USERS_PROFILE_TABLE  + " (" + T1_COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + T1_COL2 + " TEXT, " + T1_COL3 + " TEXT, " + T1_COL4 + " TEXT" + ")";
-    public static final String create_ip_table = "CREATE TABLE " + INVESTMENT_PORTFOLIO_TABLE  + " (" + T2_COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + T2_COL2 + " TEXT, " + T2_COL3 + " TEXT, " + T2_COL4 + " INTEGER, " + T2_COL5 + " REAL" + ")";
+    public static final String create_user_profile_table = "CREATE TABLE " + USERS_PROFILE_TABLE  + " (" + T1_COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + T1_COL2 + " TEXT, " + T1_COL3 + " TEXT, " + T1_COL4 + " TEXT" + ")";
+    public static final String create_ip_table = "CREATE TABLE " + INVESTMENT_PORTFOLIO_TABLE  + " (" + T2_COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + T2_COL2 + " TEXT, " + T2_COL3 + " TEXT, " + T2_COL4 + " INTEGER, " + T2_COL5 + " REAL, " +  T2_COL6 + " REAL" + ")";
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 2);
         // used once for create the database and its tables
-        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
     }
 
     @Override
@@ -51,14 +54,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertInvestData(String username, String stickerSybmol, int numberOfShares, double pricePerShare) {
+    public boolean insertInvestData(String username, String stickerSymbol, int numberOfShares, double pricePerShare, double totalPerShare) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("USERNAME", username);
-        contentValues.put("STICKER SYMBOL", stickerSybmol);
-        contentValues.put("NUMBER OF SHARES", numberOfShares);
-        contentValues.put("PRICE PER SHARE", pricePerShare);
+        contentValues.put("STICKER", stickerSymbol);
+        contentValues.put("NUMBER", numberOfShares);
+        contentValues.put("PRICE", pricePerShare);
+        contentValues.put("TOTAL", totalPerShare);
 
         long result = db.insert(INVESTMENT_PORTFOLIO_TABLE, null, contentValues);
 
@@ -116,6 +120,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return true;
     }
+
     public boolean checkLogin(String username, String password) {
         if(!ifUserExists(username)) {
             SQLiteDatabase db = this.getReadableDatabase();

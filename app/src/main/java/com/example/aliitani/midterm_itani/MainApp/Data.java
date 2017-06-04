@@ -10,9 +10,18 @@ import java.util.List;
  */
 
 public class Data {
+    static Information mInformation = new Information();
+    static ArrayList<Information> data = new ArrayList<>();
 
+    public static void addItem(String tickerSymbol, String numberofShares, String pricePerShare, String total) {
+        mInformation.setTickerSymbol(tickerSymbol);
+        mInformation.setNumberOfShares(Integer.parseInt(numberofShares));
+        mInformation.setPricePerShare(Double.parseDouble(pricePerShare));
+        mInformation.setTotalPerShare(Double.parseDouble(total));
+        data.add(mInformation);
+    }
     public static ArrayList<Information> getData() {
-        ArrayList<Information> data = new ArrayList<>();
+        // intent gets user checks database add the information and then return the data.
 
 //        for(int i = 0; i < 10; i++) {
 //            Information information = new Information();
