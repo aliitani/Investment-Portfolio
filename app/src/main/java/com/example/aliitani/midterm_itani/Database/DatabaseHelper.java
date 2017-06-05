@@ -321,18 +321,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(c.getCount() > 0) {
             return c.getString(c.getColumnIndex("ID"));
         }
-        return null;
+        return "";
     }
 
     public Integer deleteData(String username, String tickerSymbol, int numberOfShares) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         String id = getID(username, tickerSymbol, String.valueOf(numberOfShares));
         if(id.isEmpty()) {
-
+            return 0;
         }else {
             return sqLiteDatabase.delete(INVESTMENT_PORTFOLIO_TABLE, "STICKER = ? AND NUMBER = ? AND ID = ?" , new String[] {tickerSymbol, String.valueOf(numberOfShares), id});
         }
-        return null;
     }
 
     public boolean insertInvestData(String username, String stickerSymbol, int numberOfShares, double pricePerShare, double totalPerShare) {

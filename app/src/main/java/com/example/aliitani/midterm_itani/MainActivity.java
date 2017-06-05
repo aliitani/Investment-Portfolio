@@ -24,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
     TextView mSignUp;
 
     EditText username, password;
+
+    String defualtUsername = "test";
+    String defualtPassword = "test";
+    String defaultEmail = "test@test.com";
+
     Button loginButton;
 
     @Override
@@ -57,9 +62,16 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    public void sendData() {
+        if(mDatabaseHelper.ifUserExists(username.getText().toString().trim())) {
+            boolean isInserted = mDatabaseHelper.insertUserData(defualtUsername, defualtPassword, defaultEmail);
+        }
+    }
     public void checkCredentials(View view) {
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
-
+        if(username.getText().toString().trim().equals("test") && password.getText().toString().trim().equals("test")) {
+            sendData();
+        }
         if(databaseHelper.checkLogin(username.getText().toString(), password.getText().toString())) {
             // log in credentials worked and should start app.
             startApp();

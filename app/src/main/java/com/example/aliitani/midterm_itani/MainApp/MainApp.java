@@ -326,6 +326,7 @@ public class MainApp extends AppCompatActivity {
                     getTotalValues();
                 } else {
                     Toast.makeText(MainApp.this, "Deletion is Not Done!", Toast.LENGTH_SHORT).show();
+                    mMyAdapter.notifyDataSetChanged();
                 }
                 alertDialog.dismiss();
                 databaseHelper.close();

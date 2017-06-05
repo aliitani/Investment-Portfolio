@@ -28,6 +28,7 @@ public class ForgotPassword extends AppCompatActivity {
         email = (EditText) findViewById(R.id.email);
         submitButton = (Button) findViewById(R.id.get_password);
 
+
         // check if email exists in data base and also check if it meets regex.
         // 1 check if meets regex
         // 2 check if exists in db
