@@ -5,10 +5,11 @@ package com.example.aliitani.midterm_itani.MainApp;
  */
 
 public class Information {
-    public String tickerSymbol;
-    public int numberOfShares;
-    public double pricePerShare;
-    public double totalPerShare;
+    private String tickerSymbol;
+    private int numberOfShares;
+    private double pricePerShare;
+    private double totalPerShare;
+
 
     public String getTickerSymbol() {
         return tickerSymbol;

@@ -1,8 +1,10 @@
 package com.example.aliitani.midterm_itani.MainApp;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -13,6 +15,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,15 +39,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainApp extends AppCompatActivity {
     DatabaseHelper databaseHelper;
 
-    TextView titleAuthUser;
+
     RecyclerView mRecyclerView;
+    RecyclerView.LayoutManager mLayoutManager;
     MyAdapter mMyAdapter;
-    Data data;
+
     Toolbar toolbar;
+    TextView titleAuthUser;
 
     String result;
     String symbol;
@@ -56,7 +62,10 @@ public class MainApp extends AppCompatActivity {
     String tickerSymbol;
 
     TextView totalShares;
-    double total;
+    double total = 0.0;
+
+    String newNumberShares;
+
 //    ArrayList<Information> data;
 //    Information mInformation;
 
@@ -64,6 +73,8 @@ public class MainApp extends AppCompatActivity {
     JSONObject query;
     JSONObject results;
     JSONObject quote;
+    Information mInformation;
+    ArrayList<Information> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,17 +85,17 @@ public class MainApp extends AppCompatActivity {
         totalShares = (TextView) findViewById(R.id.total_shares);
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
+        mInformation = new Information();
+        data = new ArrayList<>();
+
         setRecyclerView();
         setTitleAuthUser();
+        setItemTouchHelper();
         setSupportActionBar(toolbar);
 
-        onLogIn();
 
     }
-    public void onLogIn() {
-        String selectQuery = "SELECT * FROM Ip_Table where username = '1'";
 
-    }
     public void setTitleAuthUser(){
         username = getIntent().getStringExtra("Username");
         username += "'s Investment Portfolio.";
@@ -92,16 +103,73 @@ public class MainApp extends AppCompatActivity {
 
     }
 
+    public void addItem(String tickerSymbol, String numberofShares, String pricePerShare, String total) {
+        mInformation.setTickerSymbol(tickerSymbol);
+        mInformation.setNumberOfShares(Integer.parseInt(numberofShares));
+        mInformation.setPricePerShare(Double.parseDouble(pricePerShare));
+        mInformation.setTotalPerShare(Double.parseDouble(total));
+        data.add(mInformation);
+    }
+
+    public ArrayList<Information> getData() {
+        return data;
+    }
+
+    public ArrayList<Information> returnOnStart() {
+        data = new ArrayList<>();
+        databaseHelper = new DatabaseHelper(MainApp.this);
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+
+        Cursor cursor = databaseHelper.getInformation(sqLiteDatabase);
+
+        cursor.moveToFirst();
+        do {
+            Information information = new Information();
+            information.setTickerSymbol(cursor.getString(0));
+            information.setNumberOfShares(Integer.parseInt(cursor.getString(1)));
+            information.setPricePerShare(Double.parseDouble(cursor.getString(2)));
+            information.setTotalPerShare(Double.parseDouble(cursor.getString(3)));
+            data.add(information);
+        } while (cursor.moveToNext());
+        databaseHelper.close();
+        return data;
+    }
+
+    public void getTotalValues() {
+        if(databaseHelper.onLogIn(getIntent().getStringExtra("Username"))) {
+            ArrayList<HashMap<String, String>> arrayList = databaseHelper.getItems(getIntent().getStringExtra("Username"));
+            total = 0;
+            for(int i = 0; i < arrayList.size(); i++){
+
+                total += Double.parseDouble(arrayList.get(i).get("TOTAL"));
+            }
+
+            totalShares.setText(String.format("Total: %.4f", total));
+        }
+    }
     public void setRecyclerView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mMyAdapter = new MyAdapter(MainApp.this, Data.getData());
-        data = new Data();
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
+        if(databaseHelper.onLogIn(getIntent().getStringExtra("Username"))) {
+            ArrayList<HashMap<String, String>> arrayList = databaseHelper.getItems(getIntent().getStringExtra("Username"));
+
+            total = 0.0;
+
+            for(int i = 0; i < arrayList.size(); i++){
+
+                total += Double.parseDouble(arrayList.get(i).get("TOTAL"));
+            }
+
+            totalShares.setText(String.format("Total: %.4f", total));
+            mMyAdapter = new MyAdapter(MainApp.this, returnOnStart());
+        } else {
+            mMyAdapter = new MyAdapter(MainApp.this, getData());
+        }
         mRecyclerView.setAdapter(mMyAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         Drawable dividerDrawable = ContextCompat.getDrawable(this, android.R.drawable.divider_horizontal_textfield);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, 1));
-
     }
 
     public void addItems(String price) {
@@ -109,10 +177,11 @@ public class MainApp extends AppCompatActivity {
         System.out.println(isInserted);
 
         if (isInserted){
-            data.addItem(tickerSymbol, numberShares, price, String.valueOf(Integer.parseInt(numberShares)* Double.parseDouble(price)));
-            total += Integer.parseInt(numberShares) * Double.parseDouble(price);
+            addItem(tickerSymbol, numberShares, price, String.valueOf(Integer.parseInt(numberShares)* Double.parseDouble(price)));
+            total += (Integer.parseInt(numberShares) * Double.parseDouble(price));
             totalShares.setText(String.format("Total for this portfolio: %.4f", total));
-            mMyAdapter.notifyItemInserted(data.getData().size()-1);
+            mMyAdapter.notifyItemInserted(getData().size()-1);
+            setRecyclerView();
         } else {
             Toast.makeText(MainApp.this, "Note added, Database Error!", Toast.LENGTH_SHORT).show();
         }
@@ -147,7 +216,52 @@ public class MainApp extends AppCompatActivity {
         }
     }
 
-    public void addItem() {
+    public void readNewJSON() {
+        System.out.println("here");
+        System.out.println(result);
+
+        if(result != null) {
+            try {
+                start = new JSONObject(result);
+                query = start.getJSONObject("query");
+                results = query.getJSONObject("results");
+                quote = results.getJSONObject("quote");
+                System.out.println(quote.getString("LastTradePriceOnly"));
+                stockPrice = quote.getString("LastTradePriceOnly");
+                System.out.println(stockPrice);
+
+                updateItems(stockPrice);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(this, "JSON ERROR.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateItems(String stockPrice) {
+        databaseHelper.updateItems(getIntent().getStringExtra("Username"), symbol, newNumberShares, stockPrice);
+        Toast.makeText(MainApp.this, "Done Updating", Toast.LENGTH_SHORT).show();
+    }
+
+    public void refreshListItem() {
+        // refresh the json and check for each user the price per shares if dropped or raised.
+        // call the data abse pull tickersybmol check price from json update it in database and then update the items in recycler view
+        // check for each ticker symbol the price and apply it to the number of shares and update the recycler view
+        ArrayList<HashMap<String, String>> array = databaseHelper.getItems(getIntent().getStringExtra("Username"));
+        if(array.size() != 0) {
+            for(int i = 0; i <array.size(); i++) {
+                symbol = array.get(i).get("STICKER");
+
+                new RefreshBackgroundTask().execute();
+            }
+        } else {
+            Toast.makeText(MainApp.this, "Nothing to Update", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void addItemDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainApp.this);
         View view = getLayoutInflater().inflate(R.layout.add_item_layout_dialog, null);
 
@@ -187,21 +301,86 @@ public class MainApp extends AppCompatActivity {
         });
     }
 
-    public void addInvestment(String symbol, double shares) {
+    public void deleteItem(final int position) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainApp.this);
+        View view = getLayoutInflater().inflate(R.layout.delete_item_slide, null);
+
+        final Button okButton = (Button) view.findViewById(R.id.ok_button);
+        final Button closeButton = (Button) view.findViewById(R.id.no_button);
+
+        builder.setTitle("Delete an item!!");
+        builder.setMessage("Are you sure?!?!");
+
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer deleteRos = databaseHelper.deleteData(getIntent().getStringExtra("Username"), data.get(position).getTickerSymbol(), data.get(position).getNumberOfShares());
+                if(deleteRos > 0) {
+                    total -= data.get(position).getTotalPerShare();
+                    System.out.println(databaseHelper.getTotalPerShare(data.get(position).getTickerSymbol(), getIntent().getStringExtra("Username")));
+                    totalShares.setText("Total: " + String.valueOf(total));
+                    data.remove(position);
+                    mMyAdapter.notifyItemRemoved(position);
+                    Toast.makeText(MainApp.this, "Deletion is Done!", Toast.LENGTH_SHORT).show();
+                    getTotalValues();
+                } else {
+                    Toast.makeText(MainApp.this, "Deletion is Not Done!", Toast.LENGTH_SHORT).show();
+                }
+                alertDialog.dismiss();
+                databaseHelper.close();
+            }
+        });
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setRecyclerView();
+                alertDialog.dismiss();
+            }
+        });
 
     }
 
-    public void refreshListItem() {
-        // refresh the json and check for each user the price per shares if dropped or raised.
-        // call the data abse pull tickersybmol check price from json update it in database and then update the items in recycler view
-        // check for each ticker symbol the price and apply it to the number of shares and update the recycler view
-
+    public void moveItem(int oldPos, int newPos) {
+        Information temp = data.get(oldPos);
+        data.remove(oldPos);
+        data.add(newPos, temp);
+        mMyAdapter.notifyItemMoved(oldPos, newPos);
     }
+
+    public void setItemTouchHelper() {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(createHelperCallBack());
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+    }
+
+    private ItemTouchHelper.Callback createHelperCallBack() {
+        ItemTouchHelper.SimpleCallback simpleItemCallback =
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                moveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                deleteItem(viewHolder.getAdapterPosition());
+
+            }
+        };
+        return simpleItemCallback;
+    }
+
 
     class BackgroundTask extends AsyncTask<Void, Void, String> {
         String JSON_URL;
         String JSON_STRING;
-
+        ProgressDialog mProgressDialog;
         @Override
         protected void onProgressUpdate(Void... values) {
             super.onProgressUpdate(values);
@@ -210,12 +389,19 @@ public class MainApp extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             result = s;
+            mProgressDialog.dismiss();
             readJSON();
         }
 
         @Override
         protected void onPreExecute() {
             JSON_URL = "https://query.yahooapis.com/v1/public/yql?q=Select%20*%20from%20yahoo.finance.quote%20where%20symbol%20in%20(%22" + symbol + "%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
+            mProgressDialog = new ProgressDialog(MainApp.this);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setTitle("Please wait..");
+            mProgressDialog.setMessage("Fetch in Progress");
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
         }
 
         @Override
@@ -230,7 +416,7 @@ public class MainApp extends AppCompatActivity {
                 while ((JSON_STRING = bufferedReader.readLine()) != null) {
 
                     stringBuilder.append(JSON_STRING + "\n");
-
+                    Thread.sleep(500);
                 }
 
                 bufferedReader.close();
@@ -244,6 +430,58 @@ public class MainApp extends AppCompatActivity {
         }
     }
 
+    class RefreshBackgroundTask extends AsyncTask<Void, Void, String> {
+        String JSON_URL;
+        String JSON_STRING;
+        ProgressDialog mProgressDialog;
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            result = s;
+            mProgressDialog.dismiss();
+            readNewJSON();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            JSON_URL = "https://query.yahooapis.com/v1/public/yql?q=Select%20*%20from%20yahoo.finance.quote%20where%20symbol%20in%20(%22" + symbol + "%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
+            mProgressDialog = new ProgressDialog(MainApp.this);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setTitle("Please wait..");
+            mProgressDialog.setMessage("Fetch in Progress");
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                URL url = new URL(JSON_URL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((JSON_STRING = bufferedReader.readLine()) != null) {
+
+                    stringBuilder.append(JSON_STRING + "\n");
+                    Thread.sleep(500);
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -255,7 +493,7 @@ public class MainApp extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_item:
-                addItem();
+                addItemDialog();
                 return true;
             case R.id.refresh_item:
                 refreshListItem();

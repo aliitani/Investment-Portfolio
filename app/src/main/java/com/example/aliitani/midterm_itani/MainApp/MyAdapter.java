@@ -1,7 +1,6 @@
 package com.example.aliitani.midterm_itani.MainApp;
 
 import android.content.Context;
-import android.icu.text.IDNA;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aliitani.midterm_itani.Database.DatabaseHelper;
 import com.example.aliitani.midterm_itani.R;
 
 import java.util.ArrayList;
@@ -20,8 +20,10 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public Context context;
+    Information infoData;
+    int currentPosition;
 
-    private ArrayList<Information> data;
+    ArrayList<Information> data = new ArrayList<>();
 
     private LayoutInflater mInflater;
 
@@ -35,7 +37,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.list_item_invest, parent, false);
+        View view = mInflater.inflate(R.layout.list_item_row_invest, parent, false);
 
         MyViewHolder holder = new MyViewHolder(view);
 
@@ -47,33 +49,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         myViewHolder.mtickerSymbol.setText(data.get(position).getTickerSymbol());
         myViewHolder.mNumberOfShares.setText(String.valueOf(data.get(position).getNumberOfShares()));
 
-        final int currentPosition = position;
-        final Information infoData = data.get(position);
+        currentPosition = position;
+        infoData = data.get(position);
 
 
         // add or remove in here
-        myViewHolder.mNumberOfShares.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Toast.makeText(context, "OnClick Called at position " + position, Toast.LENGTH_SHORT).show();
-                addItem(currentPosition, infoData);
-            }
-        });
-
-        myViewHolder.mtickerSymbol.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-
-                Toast.makeText(context, "OnLongClick Called at position " + position, Toast.LENGTH_SHORT).show();
-
-                removeItem(infoData);
-
-                return true;
-            }
-
-
-        });
     }
 
     @Override
@@ -94,13 +74,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    private void removeItem(Information infoData) {
-        int currentPosition = data.indexOf(infoData);
-        data.remove(currentPosition);
-        notifyItemRemoved(currentPosition);
-    }
-    private void addItem(int position, Information infoData) {
-        data.add(position, infoData);
-        notifyItemInserted(position);
+    public void delete(int pos) {
+        data.remove(pos);
+        this.notifyItemRemoved(pos);
     }
 }
