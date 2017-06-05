@@ -242,6 +242,7 @@ public class MainApp extends AppCompatActivity {
 
     private void updateItems(String stockPrice) {
         databaseHelper.updateItems(getIntent().getStringExtra("Username"), symbol, newNumberShares, stockPrice);
+        setRecyclerView();
         Toast.makeText(MainApp.this, "Done Updating", Toast.LENGTH_SHORT).show();
     }
 
