@@ -7,5 +7,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="Custom.EditText.Style" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
+    </style>
 
 </resources>

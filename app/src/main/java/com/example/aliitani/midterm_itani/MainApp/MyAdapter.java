@@ -19,15 +19,13 @@ import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-    public Context context;
+    private Context context;
     Information infoData;
     int currentPosition;
 
     ArrayList<Information> data = new ArrayList<>();
 
     private LayoutInflater mInflater;
-
-    private int previousPositon = 0;
 
     public MyAdapter (Context context, ArrayList<Information> data) {
         this.context = context;
@@ -45,11 +43,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         myViewHolder.mtickerSymbol.setText(data.get(position).getTickerSymbol());
         myViewHolder.mNumberOfShares.setText(String.valueOf(data.get(position).getNumberOfShares()));
-
-        currentPosition = position;
+        myViewHolder.mPricePerShare.setText(String.format("Price Per Share: %s", String.valueOf(data.get(position).getPricePerShare())));
+        double totalPrice = (data.get(position).getNumberOfShares()*data.get(position).getPricePerShare());
+        myViewHolder.mPriceshares.setText(String.format("Total Price: %.2f", totalPrice));
+        currentPosition = myViewHolder.getAdapterPosition();
         infoData = data.get(position);
 
 
@@ -65,12 +65,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         TextView mtickerSymbol;
         TextView mNumberOfShares;
+        TextView mPricePerShare;
+        TextView mPriceshares;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
             mtickerSymbol = (TextView) itemView.findViewById(R.id.ticker_symbol_view);
             mNumberOfShares = (TextView) itemView.findViewById(R.id.number_of_shares_view);
+            mPricePerShare = (TextView) itemView.findViewById(R.id.price_per_share_view);
+            mPriceshares = (TextView) itemView.findViewById(R.id.total_shares_view);
         }
     }
 

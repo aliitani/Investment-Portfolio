@@ -1,9 +1,11 @@
 package com.example.aliitani.midterm_itani.MainApp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
@@ -16,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,18 +29,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.aliitani.midterm_itani.Database.DatabaseHelper;
+import com.example.aliitani.midterm_itani.MainActivity;
 import com.example.aliitani.midterm_itani.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -66,9 +68,6 @@ public class MainApp extends AppCompatActivity {
 
     String newNumberShares;
 
-//    ArrayList<Information> data;
-//    Information mInformation;
-
     JSONObject start;
     JSONObject query;
     JSONObject results;
@@ -92,8 +91,6 @@ public class MainApp extends AppCompatActivity {
         setTitleAuthUser();
         setItemTouchHelper();
         setSupportActionBar(toolbar);
-
-
     }
 
     public void setTitleAuthUser(){
@@ -144,7 +141,7 @@ public class MainApp extends AppCompatActivity {
                 total += Double.parseDouble(arrayList.get(i).get("TOTAL"));
             }
 
-            totalShares.setText(String.format("Total: %.4f", total));
+            totalShares.setText(String.format("Total Investments: %.2f", total));
         }
     }
     public void setRecyclerView() {
@@ -162,7 +159,7 @@ public class MainApp extends AppCompatActivity {
                 total += Double.parseDouble(arrayList.get(i).get("TOTAL"));
             }
 
-            totalShares.setText(String.format("Total: %.4f", total));
+            totalShares.setText(String.format("Total Investments: %.2f", total));
             mMyAdapter = new MyAdapter(MainApp.this, returnOnStart());
         } else {
             mMyAdapter = new MyAdapter(MainApp.this, getData());
@@ -179,7 +176,7 @@ public class MainApp extends AppCompatActivity {
         if (isInserted){
             addItem(tickerSymbol, numberShares, price, String.valueOf(Integer.parseInt(numberShares)* Double.parseDouble(price)));
             total += (Integer.parseInt(numberShares) * Double.parseDouble(price));
-            totalShares.setText(String.format("Total for this portfolio: %.4f", total));
+            totalShares.setText(String.format("Total Investments: %.2f", total));
             mMyAdapter.notifyItemInserted(getData().size()-1);
             setRecyclerView();
         } else {
@@ -217,9 +214,7 @@ public class MainApp extends AppCompatActivity {
     }
 
     public void readNewJSON() {
-        System.out.println("here");
-        System.out.println(result);
-
+        Log.d("JSON Operations", "Reading New JSON");
         if(result != null) {
             try {
                 start = new JSONObject(result);
@@ -230,6 +225,7 @@ public class MainApp extends AppCompatActivity {
                 stockPrice = quote.getString("LastTradePriceOnly");
                 System.out.println(stockPrice);
 
+                Log.d("JSON Operations", "Done Reading!");
                 updateItems(stockPrice);
 
             } catch (JSONException e) {
@@ -254,7 +250,7 @@ public class MainApp extends AppCompatActivity {
         if(array.size() != 0) {
             for(int i = 0; i <array.size(); i++) {
                 symbol = array.get(i).get("STICKER");
-
+                newNumberShares = array.get(i).get("NUMBER");
                 new RefreshBackgroundTask().execute();
             }
         } else {
@@ -323,7 +319,7 @@ public class MainApp extends AppCompatActivity {
                 if(deleteRos > 0) {
                     total -= data.get(position).getTotalPerShare();
                     System.out.println(databaseHelper.getTotalPerShare(data.get(position).getTickerSymbol(), getIntent().getStringExtra("Username")));
-                    totalShares.setText("Total: " + String.valueOf(total));
+                    totalShares.setText(String.format("Total Investments: %s", String.valueOf(total)));
                     data.remove(position);
                     mMyAdapter.notifyItemRemoved(position);
                     Toast.makeText(MainApp.this, "Deletion is Done!", Toast.LENGTH_SHORT).show();
@@ -453,7 +449,7 @@ public class MainApp extends AppCompatActivity {
             mProgressDialog = new ProgressDialog(MainApp.this);
             mProgressDialog.setIndeterminate(true);
             mProgressDialog.setTitle("Please wait..");
-            mProgressDialog.setMessage("Fetch in Progress");
+            mProgressDialog.setMessage("Update in Progress");
             mProgressDialog.setCancelable(false);
             mProgressDialog.show();
         }
@@ -483,6 +479,15 @@ public class MainApp extends AppCompatActivity {
             return null;
         }
     }
+
+    public void logOut() {
+        databaseHelper.LogOut(getIntent().getStringExtra("Username").trim());
+        Intent logoutIntent = new Intent(MainApp.this, MainActivity.class);
+        logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(logoutIntent);
+        Toast.makeText(this, "Log out done!", Toast.LENGTH_LONG).show();
+        finish();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -498,6 +503,9 @@ public class MainApp extends AppCompatActivity {
                 return true;
             case R.id.refresh_item:
                 refreshListItem();
+                return true;
+            case R.id.logout_item:
+                logOut();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

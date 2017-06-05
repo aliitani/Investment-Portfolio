@@ -21,6 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Database.db";
     public static final String USERS_PROFILE_TABLE = "Users_Table";
     public static final String INVESTMENT_PORTFOLIO_TABLE = "Ip_Table";
+    public static final String USER_LOGIN_SESSION = "Users_LOGIN";
 
     public static final String T1_COL1 = "ID";
     public static final String T1_COL2 = "USERNAME";
@@ -34,13 +35,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String T2_COL5 = "PRICE";
     public static final String T2_COL6 = "TOTAL";
 
+    public static final String T3_COL1 = "ID";
+    public static final String T3_COL2 = "USERNAME";
+    public static final String T3_COL3 = "PASSWORD";
+    public static final String T3_COL4 = "ISLOGGEDIN";
+
     public static final String create_user_profile_table = "CREATE TABLE " + USERS_PROFILE_TABLE  + " (" + T1_COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + T1_COL2 + " TEXT, " + T1_COL3 + " TEXT, " + T1_COL4 + " TEXT" + ")";
     public static final String create_ip_table = "CREATE TABLE " + INVESTMENT_PORTFOLIO_TABLE  + " (" + T2_COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + T2_COL2 + " TEXT, " + T2_COL3 + " TEXT, " + T2_COL4 + " INTEGER, " + T2_COL5 + " REAL, " +  T2_COL6 + " REAL" + ")";
+    public static final String create_userLogin_table = "CREATE TABLE " + USER_LOGIN_SESSION + " (" + T3_COL1 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + T3_COL2 + " TEXT, " + T3_COL3 + " TEXT, " + T3_COL4 + " INTEGER)";
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 2);
+        super(context, DATABASE_NAME, null, 3);
         Log.d("Database Operations", "Database Created!");
         //db version
         // used once for create the database and its tables
@@ -51,6 +59,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(create_user_profile_table);
         db.execSQL(create_ip_table);
+        db.execSQL(create_userLogin_table);
         Log.d("Database Operations" , "Table Created!");
     }
 
@@ -58,6 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + USERS_PROFILE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + INVESTMENT_PORTFOLIO_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + USER_LOGIN_SESSION);
         onCreate(db);
         Log.d("Database Operations", "Table Updated..");
     }
@@ -108,6 +118,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return 0;
     }
 
+    public boolean setUserLoginSession(String username, String password, int state) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("USERNAME", username);
+        contentValues.put("PASSWORD", password);
+        contentValues.put("ISLOGGEDIN", state);
+        long result = db.insert(USER_LOGIN_SESSION, null, contentValues);
+
+        if(result == -1) {
+            return false;
+        }
+        Log.d("Database Operations", " One Row Inserted Login Session");
+        return true;
+    }
+
+    public void LogOut(String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE " + USER_LOGIN_SESSION + " SET ISLOGGEDIN = '" + 0 + "' WHERE USERNAME = '" + username + "'");
+        db.close();
+    }
+
+    public String checkIfLoggedIn() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT " + T3_COL2 + " FROM " + USER_LOGIN_SESSION + " WHERE ISLOGGEDIN = '" + 1 + "'";
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if(c.getCount() > 0) {
+            c.moveToFirst();
+            return c.getString(c.getColumnIndex("USERNAME"));
+        }
+        return "";
+    }
 
 
     public boolean insertUserData(String username, String password, String email) {
@@ -266,6 +311,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return arrayList;
     }
+
     public String getID(String username, String tickerSymbol, String numberOfShares) {
         SQLiteDatabase db = this.getReadableDatabase();
         String selectQuery = "SELECT ID FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "' AND STICKER = '" + tickerSymbol + "' AND NUMBER = '" + numberOfShares + "'";
@@ -288,6 +334,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return null;
     }
+
     public boolean insertInvestData(String username, String stickerSymbol, int numberOfShares, double pricePerShare, double totalPerShare) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -313,7 +360,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT PRICE FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "' AND STICKER = '" + stickerSymbol +" AND NUMBER = '" + numberShares + ";";
+        String selectQuery = "SELECT PRICE FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "' AND STICKER = '" + stickerSymbol +"' AND NUMBER = '" + numberShares + "';";
 
         Cursor c = db.rawQuery(selectQuery, null);
         c.moveToFirst();
@@ -325,11 +372,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return false;
     }
+
     public void updateItems(String username, String stickerSymbol, String numberShares, String stockPrice) {
         SQLiteDatabase db = this.getWritableDatabase();
         if(!checkIfDifferent(username,stickerSymbol,numberShares,stockPrice)) {
             double total = Integer.parseInt(numberShares) * Double.parseDouble(stockPrice);
-            db.execSQL("UPDATE " + INVESTMENT_PORTFOLIO_TABLE + " SET PRICE = '" + stockPrice + "', TOTAL = '" + total + "' WHERE USERNAME ='" + username + "' AND STICKER = '" + stickerSymbol + "' AND number = '" + numberShares + "'");
+            db.execSQL("UPDATE " + INVESTMENT_PORTFOLIO_TABLE + " SET PRICE = '" + stockPrice + "', TOTAL = '" + total + "' WHERE USERNAME ='" + username + "' AND STICKER = '" + stickerSymbol + "'");
             db.close();
         }
     }

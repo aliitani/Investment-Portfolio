@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,46 +14,76 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="@color/white"
+        android:layout_toEndOf="@+id/result"/>
 
     <TextView
         android:id="@+id/authenticated_username"
-        android:layout_width="368dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="@string/authenticated_username"
         android:textAlignment="center"
-        android:textSize="20sp"
         android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_below="@+id/my_toolbar"
+        android:layout_alignParentStart="true"/>
 
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/ticker_symbol_title"
+        android:padding="5dp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_below="@+id/authenticated_username"
+        android:id="@+id/textView2"/>
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/authenticated_username"
+        android:padding="5dp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:text="@string/number_of_shares_title_main"
+        android:textAlignment="textEnd"
+        android:layout_alignParentEnd="true"/>
     <TextView
         android:id="@+id/result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.87"/>
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/total_shares">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
     <TextView
         android:id="@+id/total_shares"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:text="@string/total"
         android:textAlignment="center"
-        android:textSize="20sp"
         android:textColor="@color/black"
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/result"/>
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,6 +1,10 @@
 package com.example.aliitani.midterm_itani;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.PersistableBundle;
+import android.os.UserManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     TextView mSignUp;
 
     EditText username, password;
-
     Button loginButton;
 
     @Override
@@ -30,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         mDatabaseHelper = new DatabaseHelper(this);
 
+        checkLogginSession();
+
         mforgotPassword = (TextView) findViewById(R.id.forgot_password_id);
         mSignUp = (TextView) findViewById(R.id.sign_up_id);
         loginButton = (Button) findViewById(R.id.login_button);
@@ -38,23 +43,45 @@ public class MainActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.password_id);
 
     }
+    public void checkLogginSession() {
+        if(!mDatabaseHelper.checkIfLoggedIn().isEmpty()) {
+            returnSession();
+        }
+    }
+    public void returnSession() {
+        Intent returnApp = new Intent(MainActivity.this, MainApp.class);
+
+        returnApp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        returnApp.putExtra("Username", mDatabaseHelper.checkIfLoggedIn().trim());
+        startActivity(returnApp);
+        finish();
+    }
+
     public void checkCredentials(View view) {
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
         if(databaseHelper.checkLogin(username.getText().toString(), password.getText().toString())) {
-            Intent startApp = new Intent(MainActivity.this, MainApp.class);
-
             // log in credentials worked and should start app.
-            startApp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startApp.putExtra("Username", username.getText().toString());
-            startActivity(startApp);
-            finish();
+            startApp();
         } else {
             Toast.makeText(this, "Wrong Username and Password try again", Toast.LENGTH_SHORT).show();
         }
 
     }
 
+    public void startApp() {
+        Intent startApp = new Intent(MainActivity.this, MainApp.class);
+
+        startApp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startApp.putExtra("Username", username.getText().toString());
+        if(mDatabaseHelper.setUserLoginSession(username.getText().toString().trim(), password.getText().toString().trim(), 1)) {
+            startActivity(startApp);
+            finish();
+        } else {
+            Toast.makeText(MainActivity.this, "Log in aborted!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
     public void forgotPassword(View view) {
         Intent forgotPassword = new Intent(MainActivity.this, ForgotPassword.class);
         startActivity(forgotPassword);

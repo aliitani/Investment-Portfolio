@@ -11,7 +11,7 @@
     <string name="login_button">Log In</string>
     <string name="submit_email_button">Submit!</string>
     <string name="authenticated_username">\'s Investment Portfolio</string>
-    <string name="total">Total: </string>
+    <string name="total">Total Investments: </string>
     <string name="add">+</string>
     <string name="refresh">Refresh</string>
 
@@ -25,4 +25,17 @@
     <string name="later">Later...</string>
     <string name="yes">Yes!</string>
     <string name="no">No!</string>
+    <string name="logout">Logout</string>
+    <string name="invest_item_dialog">Invest</string>
+    <string name="sign_up">Sign Up!</string>
+    <string name="forgot_password">Forgot Password!</string>
+    <string name="cs5950_midterm_aliitani_stock_investment_portfolio">CS5950 Midterm AliItani - Stock Investment Portfolio</string>
+    <string name="ticker_symbol">Ticker Symbol:</string>
+    <string name="number_of_shares">Number of Shares:</string>
+    <string name="price_per_share">Price Per Share: </string>
+    <string name="of_shares"># of Shares</string>
+    <string name="sticker_symbol">Sticker Symbol</string>
+    <string name="total_price">Total Price:</string>
+    <string name="ticker_symbol_title">Ticker Symbol</string>
+    <string name="number_of_shares_title_main">Number of Shares</string>
 </resources>

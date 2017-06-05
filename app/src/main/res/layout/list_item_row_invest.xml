@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/ticker_symbol_view"
@@ -12,10 +13,36 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:padding="15dp"
-        android:text="TextView"
+        android:text="@string/sticker_symbol"
         android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:id="@+id/price_per_share_view"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/price_per_share"
+        android:padding="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        tools:layout_editor_absoluteY="54dp"
+        tools:layout_editor_absoluteX="0dp"
+        android:layout_below="@+id/number_of_shares_view"
+        android:layout_alignParentStart="true"/>
+    <TextView
+        android:id="@+id/total_shares_view"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/total_price"
+        android:padding="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        tools:layout_editor_absoluteY="54dp"
+        tools:layout_editor_absoluteX="0dp"
+        android:layout_below="@+id/number_of_shares_view"
+        android:layout_alignParentEnd="true"/>
 
     <TextView
         android:id="@+id/number_of_shares_view"
@@ -23,8 +50,12 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:padding="15dp"
-        android:text="TextView"
+        android:text="@string/of_shares"
         android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintRight_toRightOf="parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignEnd="@+id/total_shares_view"/>
 </RelativeLayout>

@@ -40,18 +40,26 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 System.out.println("sign up here");
-                if(!email.getText().toString().isEmpty() && !username.getText().toString().isEmpty() && !password.getText().toString().isEmpty()) {
-                    if(validate(email.getText().toString())) {
-                        if(mDatabaseHelper.ifUserExists(username.getText().toString())) {
-                            // user doesnt exist add it to sendData()
-                            sendData();
+                if(!email.getText().toString().trim().isEmpty() && !username.getText().toString().trim().isEmpty() && !password.getText().toString().trim().isEmpty()) {
+                    if(password.getText().toString().equals(confirmPassword.getText().toString())) {
+                        if (validate(email.getText().toString().trim())) {
+                            if(checkEmailExists(email.getText().toString().trim())){
+                                if (checkUsername(username.getText().toString().trim())) {
+                                    // user doesnt exist add it to sendData()
+                                    sendData();
+                                } else {
+                                    // user exists
+                                    Toast.makeText(SignUp.this, "User already exists.", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(SignUp.this, "This email is linked with a username", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            // user exists
-                            Toast.makeText(SignUp.this, "User already exists.", Toast.LENGTH_SHORT).show();
+                            // email is wrong using regex properly.
+                            Toast.makeText(SignUp.this, "Re-enter your email. i.e (Example@example.com)", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        // email is wrong using regex properly.
-                        Toast.makeText(SignUp.this, "Re-enter your email. i.e (Example@example.com)" , Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(SignUp.this, "Password does NOT match!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     // if any editexts left empty goes here.
@@ -60,9 +68,17 @@ public class SignUp extends AppCompatActivity {
             }
         });
     }
-
+    public boolean checkEmailExists(String username) {
+        return mDatabaseHelper.ifEmailExists(username);
+    }
+    public boolean checkUsername(String username) {
+        if(username.trim().isEmpty()){
+            return false;
+        }
+        return mDatabaseHelper.ifUserExists(username.trim());
+    }
     public void sendData() {
-        boolean isInserted = mDatabaseHelper.insertUserData(username.getText().toString(), password.getText().toString(), email.getText().toString());
+        boolean isInserted = mDatabaseHelper.insertUserData(username.getText().toString().trim(), password.getText().toString().trim(), email.getText().toString().trim());
 
         if(isInserted) {
             Toast.makeText(SignUp.this, "Done!", Toast.LENGTH_SHORT).show();
@@ -76,7 +92,7 @@ public class SignUp extends AppCompatActivity {
         }
     }
     public static boolean validate(String email) {
-        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email.trim());
         return matcher.find();
     }
 
