@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_above="@+id/sign_up_id"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/sign_up_id">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/username_title"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:id="@+id/textView5"/>
+
+        <EditText
+            android:id="@+id/username_sign_up_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_margin="5dp"
+            android:hint="@string/enter_username"
+            android:inputType="textPersonName"
+            android:maxLength="16"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/password_title"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:id="@+id/textView8"/>
+
+        <EditText
+            android:id="@+id/password_sign_up_id_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_password"
+            android:ems="10"
+            android:maxLength="16"
+            android:inputType="textPassword"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_pass_title"
+            android:textSize="24sp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/password_sign_up_id_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/confirm_password_hint"
+            android:ems="10"
+            android:maxLength="16"
+            android:inputType="textPassword"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/email_title"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:id="@+id/textView7"/>
+
+        <EditText
+            android:id="@+id/email_sign_up_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="@string/enter_email"/>
+
+    </LinearLayout>
+
+
+
+
+    <Button
+        android:id="@+id/sign_up_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up_title"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"/>
+
+</RelativeLayout>

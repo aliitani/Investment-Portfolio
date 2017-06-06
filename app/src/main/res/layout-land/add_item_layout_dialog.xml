@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+              android:layout_height="match_parent">
 
     <TextView
         android:layout_width="match_parent"
@@ -22,8 +22,8 @@
         android:ems="10"
         android:hint="@string/enter_ticker_symbol"
         android:textColor="@color/black"
-        android:padding="10dp"
-        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:layout_margin="5dp"
         android:inputType="text"/>
     <TextView
         android:layout_width="match_parent"
@@ -41,14 +41,14 @@
         android:ems="10"
         android:inputType="number"
         android:textColor="@color/black"
-        android:padding="10dp"
-        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:layout_margin="5dp"
         android:hint="@string/enter_number_of_shares"/>
 
     <Button
         android:id="@+id/add_item_dialog"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:background="@color/colorPrimary"
         android:layout_marginLeft="15dp"
@@ -63,7 +63,7 @@
     <Button
         android:id="@+id/cancel_button_dialog"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:textColor="@color/white"
         android:layout_marginRight="15dp"
@@ -73,6 +73,5 @@
         android:textSize="20sp"
         android:textAllCaps="false"
         android:text="@string/later"/>
-
 
 </LinearLayout>
