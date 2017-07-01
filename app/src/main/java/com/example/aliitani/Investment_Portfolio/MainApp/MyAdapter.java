@@ -1,4 +1,4 @@
-package com.example.aliitani.midterm_itani.MainApp;
+package com.example.aliitani.Investment_Portfolio.MainApp;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,10 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.aliitani.midterm_itani.Database.DatabaseHelper;
-import com.example.aliitani.midterm_itani.R;
+import com.example.aliitani.Investment_Portfolio.R;
 
 import java.util.ArrayList;
 

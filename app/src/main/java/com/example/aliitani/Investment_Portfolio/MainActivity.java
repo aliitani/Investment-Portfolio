@@ -1,10 +1,6 @@
-package com.example.aliitani.midterm_itani;
+package com.example.aliitani.Investment_Portfolio;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.PersistableBundle;
-import android.os.UserManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,8 +9,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.aliitani.midterm_itani.Database.DatabaseHelper;
-import com.example.aliitani.midterm_itani.MainApp.MainApp;
+import com.example.aliitani.Investment_Portfolio.Database.DatabaseHelper;
+import com.example.aliitani.Investment_Portfolio.MainApp.MainApp;
 
 
 public class MainActivity extends AppCompatActivity {

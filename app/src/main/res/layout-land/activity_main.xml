@@ -11,12 +11,12 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/cs5950_midterm_aliitani_stock_investment_portfolio"
+        android:text="@string/title_app"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"/>
 
         <TextView
             android:labelFor="@+id/username_id"

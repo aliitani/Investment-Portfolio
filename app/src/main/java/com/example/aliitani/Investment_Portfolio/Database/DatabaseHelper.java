@@ -1,14 +1,11 @@
-package com.example.aliitani.midterm_itani.Database;
+package com.example.aliitani.Investment_Portfolio.Database;
 
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import com.example.aliitani.midterm_itani.MainApp.Information;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String T2_COL1 = "ID";
     public static final String T2_COL2 = "USERNAME";
-    public static final String T2_COL3 = "STICKER";
+    public static final String T2_COL3 = "TICKER";
     public static final String T2_COL4 = "NUMBER";
     public static final String T2_COL5 = "PRICE";
     public static final String T2_COL6 = "TOTAL";
@@ -74,7 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean checkforDuplicates(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT DISTINCT STICKER FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "'";
+        String selectQuery = "SELECT DISTINCT TICKER FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "'";
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -87,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int getTotaLNumber(String ticker, String username) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT DISTINCT NUMBER FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "' AND STICKER = '" + ticker + "'";
+        String selectQuery = "SELECT DISTINCT NUMBER FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "' AND TICKER = '" + ticker + "'";
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -104,7 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public double getTotalPerShare(String ticker, String username) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT DISTINCT TOTAL FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "' AND STICKER = '" + ticker + "'";
+        String selectQuery = "SELECT DISTINCT TOTAL FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "' AND TICKER = '" + ticker + "'";
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -173,7 +170,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getInformation(SQLiteDatabase db) {
-        String[] projection = {"STICKER", "NUMBER", "PRICE", "TOTAL"};
+        String[] projection = {"TICKER", "NUMBER", "PRICE", "TOTAL"};
 
         Cursor cursor = db.query(INVESTMENT_PORTFOLIO_TABLE, projection, null,null,null,null,null,null);
 
@@ -297,7 +294,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(c.getCount() > 0) {
             while(!c.isAfterLast()) {
                 HashMap<String, String> todo = new HashMap<String, String>();
-                todo.put("STICKER", c.getString(2));
+                todo.put("TICKER", c.getString(2));
                 todo.put("NUMBER", c.getString(3));
                 todo.put("PRICE", c.getString(4));
                 todo.put("TOTAL", c.getString(5));
@@ -314,7 +311,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public String getID(String username, String tickerSymbol, String numberOfShares) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT ID FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "' AND STICKER = '" + tickerSymbol + "' AND NUMBER = '" + numberOfShares + "'";
+        String selectQuery = "SELECT ID FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "' AND TICKER = '" + tickerSymbol + "' AND NUMBER = '" + numberOfShares + "'";
 
         Cursor c = db.rawQuery(selectQuery, null);
         c.moveToFirst();
@@ -330,7 +327,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(id.isEmpty()) {
             return 0;
         }else {
-            return sqLiteDatabase.delete(INVESTMENT_PORTFOLIO_TABLE, "STICKER = ? AND NUMBER = ? AND ID = ?" , new String[] {tickerSymbol, String.valueOf(numberOfShares), id});
+            return sqLiteDatabase.delete(INVESTMENT_PORTFOLIO_TABLE, "TICKER = ? AND NUMBER = ? AND ID = ?" , new String[] {tickerSymbol, String.valueOf(numberOfShares), id});
         }
     }
 
@@ -339,7 +336,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("USERNAME", username);
-        contentValues.put("STICKER", stickerSymbol);
+        contentValues.put("TICKER", stickerSymbol);
         contentValues.put("NUMBER", numberOfShares);
         contentValues.put("PRICE", pricePerShare);
         contentValues.put("TOTAL", totalPerShare);
@@ -359,7 +356,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT PRICE FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "' AND STICKER = '" + stickerSymbol +"' AND NUMBER = '" + numberShares + "';";
+        String selectQuery = "SELECT PRICE FROM " + INVESTMENT_PORTFOLIO_TABLE + " WHERE USERNAME = '" + username + "' AND TICKER = '" + stickerSymbol +"' AND NUMBER = '" + numberShares + "';";
 
         Cursor c = db.rawQuery(selectQuery, null);
         c.moveToFirst();
@@ -376,7 +373,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         if(!checkIfDifferent(username,stickerSymbol,numberShares,stockPrice)) {
             double total = Integer.parseInt(numberShares) * Double.parseDouble(stockPrice);
-            db.execSQL("UPDATE " + INVESTMENT_PORTFOLIO_TABLE + " SET PRICE = '" + stockPrice + "', TOTAL = '" + total + "' WHERE USERNAME ='" + username + "' AND STICKER = '" + stickerSymbol + "'");
+            db.execSQL("UPDATE " + INVESTMENT_PORTFOLIO_TABLE + " SET PRICE = '" + stockPrice + "', TOTAL = '" + total + "' WHERE USERNAME ='" + username + "' AND TICKER = '" + stickerSymbol + "'");
             db.close();
         }
     }

@@ -1,4 +1,4 @@
-package com.example.aliitani.midterm_itani.MainApp;
+package com.example.aliitani.Investment_Portfolio.MainApp;
 
 /**
  * Created by aliitani on 6/4/2017.

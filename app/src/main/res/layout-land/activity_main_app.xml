@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.aliitani.midterm_itani.MainApp.MainApp">
+    tools:context="com.example.aliitani.Investment_Portfolio.MainApp.MainApp">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"

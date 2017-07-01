@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MIDTERM-Itani</string>
+    <string name="app_name">Investment_Portfolio</string>
     <string name="username_title">Username:</string>
     <string name="password_title">Password:</string>
     <string name="email_title">Email:</string>
@@ -29,7 +29,7 @@
     <string name="invest_item_dialog">Invest</string>
     <string name="sign_up">Sign Up!</string>
     <string name="forgot_password">Forgot Password!</string>
-    <string name="cs5950_midterm_aliitani_stock_investment_portfolio">CS5950 Midterm AliItani - Stock Investment Portfolio</string>
+    <string name="title_app">Investment Portfolio</string>
     <string name="ticker_symbol">Ticker Symbol:</string>
     <string name="number_of_shares">Number of Shares:</string>
     <string name="price_per_share">Price Per Share: </string>

@@ -1,11 +1,8 @@
-package com.example.aliitani.midterm_itani.MainApp;
+package com.example.aliitani.Investment_Portfolio.MainApp;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
@@ -28,9 +25,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.aliitani.midterm_itani.Database.DatabaseHelper;
-import com.example.aliitani.midterm_itani.MainActivity;
-import com.example.aliitani.midterm_itani.R;
+import com.example.aliitani.Investment_Portfolio.Database.DatabaseHelper;
+import com.example.aliitani.Investment_Portfolio.MainActivity;
+import com.example.aliitani.Investment_Portfolio.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -379,6 +376,7 @@ public class MainApp extends AppCompatActivity {
         String JSON_URL;
         String JSON_STRING;
         ProgressDialog mProgressDialog;
+
         @Override
         protected void onProgressUpdate(Void... values) {
             super.onProgressUpdate(values);

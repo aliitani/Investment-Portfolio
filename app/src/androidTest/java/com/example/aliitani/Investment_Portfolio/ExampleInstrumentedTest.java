@@ -1,4 +1,4 @@
-package com.example.aliitani.midterm_itani;
+package com.example.aliitani.Investment_Portfolio;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package com.example.aliitani.midterm_itani;
+package com.example.aliitani.Investment_Portfolio;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,11 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.aliitani.midterm_itani.Database.DatabaseHelper;
+import com.example.aliitani.Investment_Portfolio.Database.DatabaseHelper;
 
 import java.util.regex.Matcher;
 
-import static com.example.aliitani.midterm_itani.SignUp.VALID_EMAIL_ADDRESS_REGEX;
+import static com.example.aliitani.Investment_Portfolio.SignUp.VALID_EMAIL_ADDRESS_REGEX;
 
 public class ForgotPassword extends AppCompatActivity {
     DatabaseHelper mDatabaseHelper;
