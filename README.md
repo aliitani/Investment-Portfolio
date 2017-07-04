@@ -1,5 +1,9 @@
 # Investment_Portfolio
 A simple mock investment portfolio, that uses Yahoo API that pulls ticker information.
+Used MinSDKVersion 19 and TargetSDK 25 at the time.
+
+
+Pictures:
 
 <img src='https://user-images.githubusercontent.com/19563826/27763620-8a9de60a-5e54-11e7-811c-1cc22a0e7dc0.png' alt='Sixth'/>
 <img src='https://user-images.githubusercontent.com/19563826/27763614-88c86a62-5e54-11e7-94f0-0df3390503ab.png' alt='First'/>
