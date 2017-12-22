@@ -1,6 +1,6 @@
 # Investment_Portfolio
 <p>A simple mock investment portfolio app that pulls ticker information requested.</p>
-<h1>I used Yahoo YQL, JSON, and My SQLite</h1>
+<h3>I used Yahoo YQL, JSON, and My SQLite</h3>
 <p>Used MinSDKVersion 19 and TargetSDK 25 at the time.</p>
 
 
